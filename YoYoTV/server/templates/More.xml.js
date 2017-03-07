@@ -43,10 +43,10 @@ var More = {
 var catelog_cells = function () {
   let cellTemplate = [];
   for (var i = 0; i < 10; i++) {
-    let imgStr = "http://localhost:9001/images/home_up_" + i + ".png";
+    let imgStr = "http://localhost:9001/images/home_down_3.png";
     cellTemplate.push(`
-        <lockup tagValue="homepage_up_scrollview" vimeoID="more页面的viemoID">
-           <img src="http://localhost:9001/images/home_up_1.png" width="281" height="400" />
+        <lockup tagValue="homepage_up_scrollview" vimeoID="206381096">
+           <img src="${imgStr}" width="281" height="400" />
            <title>Movie ${i}</title>
         </lockup>
       `)

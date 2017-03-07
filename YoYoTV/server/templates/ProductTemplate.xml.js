@@ -17,10 +17,11 @@ var product_request = function (vimeoID) {
   .then((responseText)=>{
     var dic = JSON.parse(responseText);
     var playURL = dic.files[0].link;
-    var doc = Presenter.makeDocument(product_successTemplate(playURL));
+    var doc = Presenter.makeDocument(product_successTemplate(vimeoID));
     doc.addEventListener("select",Presenter.loadFilm.bind(Presenter));
     debugger
-    var loadingTem = navigationDocument.documents[1];
+    var currentNavIndex = navigationDocument.documents.length - 1;
+    var loadingTem = navigationDocument.documents[currentNavIndex];
     navigationDocument.replaceDocument(doc,loadingTem);
   })
   .catch((error)=>{
@@ -28,7 +29,7 @@ var product_request = function (vimeoID) {
   })
 }
 
-var product_successTemplate = function (playURL) {
+var product_successTemplate = function (vimeoID) {
   return `<?xml version="1.0" encoding="UTF-8" ?>
   <document>
    <productTemplate theme="dark">
@@ -83,14 +84,14 @@ var product_successTemplate = function (playURL) {
 
             </row>
          </stack>
-         <heroImg src="http://localhost:9001/images/Rectangle.png"/>
+         <heroImg src="${BASEURL + '/images/1111.png'}" />
       </banner>
       <shelf>
          <header>
             <title>3 Episodes</title>
          </header>
          <section>
-           ${episodesTemplate(playURL)}
+           ${episodesTemplate(vimeoID)}
          </section>
       </shelf>
    </productTemplate>
@@ -139,10 +140,11 @@ var episodesTemplate = function (playURL) {
 ];
 
   var episodesTemplateArray = [];
+  var episodesBackgroundImg = BASEURL + '/images/product_episodes_bg.png';
   ayy.map((productCellData,index)=>{
     episodesTemplateArray.push(`
       <lockup srcurl="${productCellData.source_url}">
-         <img src="http://localhost:9001/images/product_episodes_bg.png" width="100" height="100" />
+         <img src="${episodesBackgroundImg}" width="100" height="100" />
          <overlay>
           <title style="color:rgba(255,255,255,1.0);tv-align: center;tv-text-style: subtitle1;">${index}</title>
          </overlay>

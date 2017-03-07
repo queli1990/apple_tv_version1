@@ -111,9 +111,13 @@ var items = function (cellItemDic) {
 }
 
 var more = function () {
+
+var moreImg = BASEURL + '/images/More.png';
+console.log('moreImg:' + moreImg);
+
   return `
     <lockup isHaveMore="more">
-       <img src="http://localhost:9001/images/More.png" width="255" height="363" style="tv-placeholder: http://localhost:9001/images/home_up_0.png"/>
+       <img src="${moreImg}" width="255" height="363" style="tv-placeholder: http://localhost:9001/images/home_up_0.png"/>
        <title>More</title>
     </lockup>
   `

@@ -52,7 +52,6 @@ var Presenter = {
   },
 
   loadProductPage: function(event){
-    debugger
     var self = this,
     ele = event.target,
     title = ele.textContent;
@@ -199,7 +198,8 @@ var Presenter = {
       player.playlist = playlist;
       player.playlist.push(mediaItem);
       player.present();
-      navigationDocument.removeDocument(navigationDocument.documents[1]);
+      var currentNavIndex = navigationDocument.documents.length - 1;
+      navigationDocument.removeDocument(navigationDocument.documents[currentNavIndex]);
     })
     .catch((error)=>{
       console.log('fail' + error);

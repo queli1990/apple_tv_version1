@@ -18,7 +18,6 @@ var requestTabData = function () {
     let array = JSON.parse(responseText);
     var doc = Presenter.makeDocument(successTemplate(array));
     doc.addEventListener("select",Presenter.loadMenuItem.bind(Presenter));
-    // Presenter.replaceDocument(doc,loadingDoc);
     navigationDocument.clear();
     Presenter.pushDocument(doc);
   })

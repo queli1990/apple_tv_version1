@@ -1,4 +1,7 @@
+let BASEURL;
+
 App.onLaunch = function (options) {
+  BASEURL = options.BASEURL;
   //1
   var javascriptFiles = [
     `${options.BASEURL}js/fetch-polyfill.js`,
@@ -24,7 +27,6 @@ App.onLaunch = function (options) {
       resourceLoader = new ResourceLoader(options.BASEURL);
       resourceLoader.loadResource(`${options.BASEURL}templates/StackTemplate.xml.js`, function(resource){
         var doc = Presenter.makeDocument(resource);
-        // navigationDocument.replaceDocument(doc,loadingDoc);
         Presenter.pushDocument(doc);
       });
     } else {
