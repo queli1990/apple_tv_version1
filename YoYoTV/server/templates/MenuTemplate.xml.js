@@ -22,6 +22,7 @@ var requestTabData = function () {
     Presenter.pushDocument(doc);
   })
   .catch((error)=>{
+debugger
     let doc = Presenter.makeDocument(ErrorAlertTemplate(error,'errxxx'));
     Presenter.pushDocument(doc);
     // Presenter.replaceDocument(doc,loadingDoc);

@@ -1,30 +1,5 @@
 var StackTemplate = function (array) {
-  requestTabData();
-  return LoadingTemplate();
-}
-
-var requestTabData = function () {
-  var opts = {
-    method: 'GET'
-  }
-  fetch('http://192.168.199.200:3000/genreLists', opts)
-  .then((response) => {
-    return response.text(); //返回一个带有文本的对象
-  })
-  .then((responseText)=>{
-    let array = JSON.parse(responseText);
-    var doc = Presenter.makeDocument(requestSuccess(array));
-    doc.addEventListener("select",Presenter.homeCellClick.bind(Presenter));  //点击事件
-    // Presenter.replaceDocument(doc,loadingDoc);
-debugger
-    navigationDocument.clear();
-    Presenter.pushDocument(doc);
-  })
-  .catch((error)=>{
-    let doc = Presenter.makeDocument(ErrorAlertTemplate(error,'errxxx'));
-    Presenter.pushDocument(doc);
-    // Presenter.replaceDocument(doc,loadingDoc);
-  })
+  return Presenter.requestHomeTemplate();
 }
 
 var requestSuccess = function (bigJson) {
@@ -40,8 +15,7 @@ var requestSuccess = function (bigJson) {
             ${topScroll(bigJson)}
            </section>
           </carousel>
-
-           ${shelfs(bigJson)}
+            ${shelfs(bigJson)}
         </collectionList>
      </stackTemplate>
   </document>`
@@ -50,12 +24,12 @@ var requestSuccess = function (bigJson) {
 var topScroll = function (json) {
   // var jsstr = localStorage.getItem('homePage_bigStr')
   // var json = JSON.parse(jsstr);
-  var scrollArray = json[0].carousel_episodes;
+  var scrollArray = json.data.recommend.carousel_episodes;
   var array = [];
   scrollArray.map((cellData,index)=>{
     array.push(`
       <lockup vimeoID="206381096">
-        <img src="${cellData.portrait_poster}" width="888" height="500" />
+        <img src="${cellData.apple_poster}" width="888" height="500" />
         <overlay class="carouselOverlay">
           <title>${cellData.name}</title>
           <subtitle>${cellData.description}</subtitle>
@@ -68,24 +42,40 @@ var topScroll = function (json) {
 
 var shelfs = function (bigJson) {
   var genreListItemsArray = [];
-  bigJson.map((categoryDataArray,index)=>{
-    genreListItemsArray.push(`
-      <shelf>
-        <header>
-          <title>${categoryDataArray.name}</title>
-        </header>
-        <section>
-          ${sections(categoryDataArray.genreListItems)}
-        </section>
-      </shelf>
-    `);
-  });
+  for (key in bigJson.data) {
+debugger;
+    if (key != 'recommend') {
+      genreListItemsArray.push(`
+        <shelf>
+          <header>
+            <title>${bigJson.data[key].name}</title>
+          </header>
+          <section>
+            ${sections(bigJson.data[key].carousel_episodes)}
+          </section>
+        </shelf>
+      `);
+    }
+  }
+
+  // bigJson.data.map((categoryDataArray,index)=>{
+  //   genreListItemsArray.push(`
+  //     <shelf>
+  //       <header>
+  //         <title>${categoryDataArray.name}</title>
+  //       </header>
+  //       <section>
+  //         ${sections(categoryDataArray.genreListItems)}
+  //       </section>
+  //     </shelf>
+  //   `);
+  // });
   return genreListItemsArray.join('');
 }
 
 var sections = function (categoryDataArray) {
   var sectionsItemArray = [];
-
+debugger
   categoryDataArray.map((cellItem,index)=>{
     sectionsItemArray.push(`
        ${items(cellItem)}
@@ -116,7 +106,7 @@ var moreImg = BASEURL + '/images/More.png';
 console.log('moreImg:' + moreImg);
 
   return `
-    <lockup isHaveMore="more">
+    <lockup isHaveMore="more" album="episodes">
        <img src="${moreImg}" width="255" height="363" style="tv-placeholder: http://localhost:9001/images/home_up_0.png"/>
        <title>More</title>
     </lockup>

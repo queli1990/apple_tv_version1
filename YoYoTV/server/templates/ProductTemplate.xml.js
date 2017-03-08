@@ -1,32 +1,6 @@
 var ProductTemplate = function (vimeoID) {
-  product_request(vimeoID);
-  return LoadingTemplate();
-}
-
-var product_request = function (vimeoID) {
-  var headers = new Headers({
-    'cacheHeaderValue' : 'no-cache',
-    'Authorization' : 'Bearer 02245412487b0a5a5f71d3c05fb3f47f'
-  });
-  var url = 'https://api.vimeo.com//videos/' + vimeoID;
-  var request = new Request(url,{headers:headers});
-  fetch(request)
-  .then((response)=>{
-    return response.text(); //返回一个带有文本的对象
-  })
-  .then((responseText)=>{
-    var dic = JSON.parse(responseText);
-    var playURL = dic.files[0].link;
-    var doc = Presenter.makeDocument(product_successTemplate(vimeoID));
-    doc.addEventListener("select",Presenter.loadFilm.bind(Presenter));
-    debugger
-    var currentNavIndex = navigationDocument.documents.length - 1;
-    var loadingTem = navigationDocument.documents[currentNavIndex];
-    navigationDocument.replaceDocument(doc,loadingTem);
-  })
-  .catch((error)=>{
-    console.log(error);
-  })
+  localStorage.setItem('product_albumID', vimeoID);
+  return Presenter.requestProductTemplate();
 }
 
 var product_successTemplate = function (vimeoID) {
@@ -63,7 +37,7 @@ var product_successTemplate = function (vimeoID) {
                <badge src="resource://cc" class="badge" />
             </row>
             <text>Follow the crazy adventures of a determined developer</text>
-            <description allowsZooming="true" moreLabel="more">The story of an aspiring developer who needs a ticket to WWDC, but can't afford one, so he hires on as a cook at the conference. Follow his trip across the country as he heads to WWDC.</description>
+            <description allowsZooming="true" moreLabel="more">With “Central China’s voice, a national vision, and global implications” as its guidelines, this program includes Hubei news and reports on major national news through typical and topical reporting.</description>
             <row>
                <buttonLockup id="product_playBtn" onselect="
                   var doc = Presenter.makeDocument(LoadingTemplate());
@@ -143,7 +117,7 @@ var episodesTemplate = function (playURL) {
   var episodesBackgroundImg = BASEURL + '/images/product_episodes_bg.png';
   ayy.map((productCellData,index)=>{
     episodesTemplateArray.push(`
-      <lockup srcurl="${productCellData.source_url}">
+      <lockup srcurl="207237561">
          <img src="${episodesBackgroundImg}" width="100" height="100" />
          <overlay>
           <title style="color:rgba(255,255,255,1.0);tv-align: center;tv-text-style: subtitle1;">${index}</title>

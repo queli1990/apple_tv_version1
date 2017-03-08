@@ -6,7 +6,7 @@ ResourceLoader.prototype.loadResource = function (resource, callback) {
   var self = this;
   evaluateScripts([resource], function(success){
     if (success) {
-      var resource = MenuTemplate.call(self);
+      var resource = StackTemplate.call(self);
       callback.call(self, resource);
     } else {
       var title = "Resource Loader Error";

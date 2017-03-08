@@ -34,6 +34,19 @@ var Presenter = {
     navigationDocument.popDocument();
   },
 
+//获取完vimeoURL，直接播放
+  loadFilmForURL:function (url) {
+debugger
+    var player = new Player();
+    var playlist = new Playlist();
+    var mediaItem = new MediaItem("video", url);
+
+    player.playlist = playlist;
+    player.playlist.push(mediaItem);
+    player.present();
+  },
+
+//点击某个item事件时，获取事件信息
   loadFilm: function(event) {
     //1
     debugger
@@ -110,7 +123,6 @@ var Presenter = {
     var opts = {
       method: 'GET'
     }
-
     fetch('http://192.168.199.131:3000/genreLists', opts)
     .then((response) => {
       return response.text(); //返回一个带有文本的对象
@@ -136,8 +148,10 @@ var Presenter = {
   homeCellClick :function(event) {
     isMore = event.target.getAttribute('isHaveMore');
     if (isMore) {
-      var doc = Presenter.makeDocument(More.five('传过来的当前更多的category'));
-      doc.addEventListener("select",Presenter.toProductFromMore.bind(Presenter));
+      var albumID = event.target.getAttribute('album');
+      localStorage.setItem('albumID',albumID);
+      var resource = Presenter.requestMoreTemplate();
+      var doc = Presenter.makeDocument(resource);
       Presenter.pushDocument(doc);
     }else {
       vimeoID = event.target.getAttribute('vimeoID');
@@ -147,7 +161,8 @@ var Presenter = {
   },
 
 //付费的
-  getURLForVimeo (vimeoID){
+  getURLForVimeo (event){
+    var vimeoID = event.target.getAttribute('srcurl');
     var headers = new Headers({
       'cacheHeaderValue' : 'no-cache',
       'Authorization' : 'Bearer 02245412487b0a5a5f71d3c05fb3f47f'
@@ -161,7 +176,7 @@ var Presenter = {
     .then((responseText)=>{
       var dic = JSON.parse(responseText);
       var playURL = dic.files[0].link;
-      debugger
+      Presenter.loadFilmForURL(playURL);
     })
     .catch((error)=>{
       console.log(error);
@@ -205,5 +220,95 @@ var Presenter = {
       console.log('fail' + error);
     })
   },
+
+//获取首页的数据
+  requestHomeTemplate () {
+    var opts = {
+      method: 'GET'
+    }
+    fetch('http://47.93.83.7:8000/index/?format=json', opts)
+    .then((response) => {
+      return response.text(); //返回一个带有文本的对象
+    })
+    .then((responseText)=>{
+      let dic = JSON.parse(responseText);
+      var doc = Presenter.makeDocument(requestSuccess(dic));
+      doc.addEventListener("select",Presenter.homeCellClick.bind(Presenter));
+      var currentNavIndex = navigationDocument.documents.length - 1;
+      var loadingTem = navigationDocument.documents[currentNavIndex];
+      navigationDocument.replaceDocument(doc,loadingTem);
+    })
+    .catch((error)=>{
+      let doc = Presenter.makeDocument(ErrorAlertTemplate(error));
+      doc.addEventListener("select",Presenter.requestHomeTemplate.bind(Presenter));
+      var currentNavIndex = navigationDocument.documents.length - 1;
+      var loadingTem = navigationDocument.documents[currentNavIndex];
+      navigationDocument.replaceDocument(doc,loadingTem);
+    })
+    return LoadingTemplate();
+  },
+
+//获取产品页数据
+  requestProductTemplate () {
+    var vimeoID = localStorage.getItem('product_albumID');
+
+    var headers = new Headers({
+      'cacheHeaderValue' : 'no-cache',
+      'Authorization' : 'Bearer 02245412487b0a5a5f71d3c05fb3f47f'
+    });
+    var url = 'https://api.vimeo.com//videos/' + vimeoID;
+    var request = new Request(url,{headers:headers});
+    fetch(request)
+    .then((response)=>{
+      return response.text(); //返回一个带有文本的对象
+    })
+    .then((responseText)=>{
+      var dic = JSON.parse(responseText);
+      var playURL = dic.files[0].link;
+      var doc = Presenter.makeDocument(product_successTemplate(vimeoID));
+      doc.addEventListener("select",Presenter.getURLForVimeo.bind(Presenter));
+      var currentNavIndex = navigationDocument.documents.length - 1;
+      var loadingTem = navigationDocument.documents[currentNavIndex];
+      navigationDocument.replaceDocument(doc,loadingTem);
+    })
+    .catch((error)=>{
+      let doc = Presenter.makeDocument(ErrorAlertTemplate(error));
+      doc.addEventListener("select",Presenter.requestProductTemplate.bind(Presenter));
+      var currentNavIndex = navigationDocument.documents.length - 1;
+      var loadingTem = navigationDocument.documents[currentNavIndex];
+      navigationDocument.replaceDocument(doc,loadingTem);
+    })
+    return LoadingTemplate();
+  },
+
+  //获取更多页面数据
+    requestMoreTemplate () {
+      var more_albumID = localStorage.getItem('albumID');
+      var url = 'http://192.168.199.200:3000/' + more_albumID;
+      //http://192.168.199.200:3000/episodes
+      var opts = {
+        method: 'GET'
+      }
+      fetch(url, opts)
+      .then((response)=>{
+        return response.text(); //返回一个带有文本的对象
+      })
+      .then((responseText)=>{
+        var albumArray = JSON.parse(responseText);
+        var doc = Presenter.makeDocument(More.five('传过来的当前更多的category',albumArray));
+        doc.addEventListener("select",Presenter.toProductFromMore.bind(Presenter));
+        var currentNavIndex = navigationDocument.documents.length - 1;
+        var loadingTem = navigationDocument.documents[currentNavIndex];
+        navigationDocument.replaceDocument(doc,loadingTem);
+      })
+      .catch((error)=>{
+        let doc = Presenter.makeDocument(ErrorAlertTemplate(error));
+        doc.addEventListener("select",Presenter.requestMoreTemplate.bind(Presenter));
+        var currentNavIndex = navigationDocument.documents.length - 1;
+        var loadingTem = navigationDocument.documents[currentNavIndex];
+        navigationDocument.replaceDocument(doc,loadingTem);
+      })
+      return LoadingTemplate();
+    },
 
 }

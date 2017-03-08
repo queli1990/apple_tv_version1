@@ -1,5 +1,5 @@
 var More = {
-  five : function (categoryID) {
+  five : function (categoryID,albumArray) {
     return `<document>
        <stackTemplate>
           <banner>
@@ -8,7 +8,7 @@ var More = {
           <collectionList>
              <grid>
                 <section>
-                   ${catelog_cells()}
+                   ${catelog_cells(albumArray)}
                 </section>
              </grid>
           </collectionList>
@@ -40,16 +40,15 @@ var More = {
 }
 
 
-var catelog_cells = function () {
+var catelog_cells = function (array) {
   let cellTemplate = [];
-  for (var i = 0; i < 10; i++) {
-    let imgStr = "http://localhost:9001/images/home_down_3.png";
+  array.map((cellData,index)=>{
     cellTemplate.push(`
-        <lockup tagValue="homepage_up_scrollview" vimeoID="206381096">
-           <img src="${imgStr}" width="281" height="400" />
-           <title>Movie ${i}</title>
+        <lockup vimeoID="206381096">
+           <img src="${cellData.portrait_poster}" width="255" height="363" />
+           <title>${cellData.description}</title>
         </lockup>
       `)
-  }
+  });
   return cellTemplate.join('');
 }
