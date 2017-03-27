@@ -1,4 +1,4 @@
-let BASEURL;
+// let BASEURL;
 
 App.onLaunch = function (options) {
   BASEURL = options.BASEURL;
@@ -16,13 +16,14 @@ App.onLaunch = function (options) {
     `${options.BASEURL}templates/HomeTemplate.xml.js`,
     `${options.BASEURL}templates/StackTemplate.xml.js`,
     `${options.BASEURL}templates/More.xml.js`,
+
   ];
 
   //2
   evaluateScripts(javascriptFiles, function(success){
     // var loadingDoc = Presenter.makeDocument(ErrorAlertTemplate());
     // Presenter.pushDocument(loadingDoc);
-
+localStorage.setItem('more_page_categoryName','');
     if (success) {
       resourceLoader = new ResourceLoader(options.BASEURL);
       resourceLoader.loadResource(`${options.BASEURL}templates/StackTemplate.xml.js`, function(resource){

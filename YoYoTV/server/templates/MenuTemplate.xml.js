@@ -11,9 +11,7 @@ var requestTabData = function () {
     method: 'GET'
   }
   fetch('http://192.168.199.131:3000/genreLists', opts)
-  .then((response) => {
-    return response.text(); //返回一个带有文本的对象
-  })
+  .then((response) => {return response.text()})
   .then((responseText)=>{
     let array = JSON.parse(responseText);
     var doc = Presenter.makeDocument(successTemplate(array));

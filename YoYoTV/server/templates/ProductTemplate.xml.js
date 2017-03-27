@@ -1,9 +1,17 @@
-var ProductTemplate = function (vimeoID) {
-  localStorage.setItem('product_albumID', vimeoID);
+var ProductTemplate = function (vimeoID,name,director,cast1,cast2,cast3,cast4,release_date,launchImg) {
   return Presenter.requestProductTemplate();
 }
 
-var product_successTemplate = function (vimeoID) {
+var product_successTemplate = function (genre_id,description,bigDic) {
+  var director = localStorage.getItem('product_director');
+  var name = localStorage.getItem('product_name');
+  var cast1 = localStorage.getItem('product_cast1');
+  var cast2 = localStorage.getItem('product_cast2');
+  var cast3 = localStorage.getItem('product_cast3');
+  var cast4 = localStorage.getItem('product_cast4');
+  var release_date = localStorage.getItem('product_release_date');
+  var launchImg = localStorage.getItem('product_launchImg');
+  var castsArray = [cast1,cast2,cast3,cast4];
   return `<?xml version="1.0" encoding="UTF-8" ?>
   <document>
    <productTemplate theme="dark">
@@ -13,117 +21,116 @@ var product_successTemplate = function (vimeoID) {
         <infoList>
             <info>
                <header>
-                  <title>Director</title>
+                  <title>导演</title>
                </header>
-               <text>John Appleseed</text>
+               <text>${director}</text>
             </info>
             <info>
                <header>
-                  <title>Actors</title>
+                  <title>演员</title>
                </header>
-               <text>Anne Johnson</text>
-               <text>Tom Clark</text>
-               <text>Maria Ruiz</text>
+               ${castTemplate(castsArray)}
             </info>
          </infoList>
          <stack>
-            <title>vimeoID : ${vimeoID}</title>
+            <title>${name}</title>
             <row>
                <text><badge src="resource://tomato-fresh"/> 99%</text>
-               <text>1hr 54min</text>
-               <text>Comedy</text>
-               <text>2015</text>
+               <text>${release_date}</text>
                <badge src="resource://mpaa-pg" class="badge" />
                <badge src="resource://cc" class="badge" />
             </row>
-            <text>Follow the crazy adventures of a determined developer</text>
-            <description allowsZooming="true" moreLabel="more">With “Central China’s voice, a national vision, and global implications” as its guidelines, this program includes Hubei news and reports on major national news through typical and topical reporting.</description>
+            <text></text>
+            <description allowsZooming="true" moreLabel="more" id="product_description_btn">${description}</description>
             <row>
-               <buttonLockup id="product_playBtn" onselect="
-                  var doc = Presenter.makeDocument(LoadingTemplate());
-                  Presenter.pushDocument(doc);
-                 ">
+               <buttonLockup id="product_playBtn" >
                   <badge src="resource://button-preview" />
                   <title>Preview</title>
                </buttonLockup>
-               <buttonLockup type="buy">
-                  <text>$9.99</text>
-                  <title>Buy</title>
-               </buttonLockup>
-
-               <buttonLockup style="width:100">
-                 <text>1</text>
-                 <title>Title</title>
-               </buttonLockup>
-
             </row>
          </stack>
-         <heroImg src="${BASEURL + '/images/1111.png'}" />
+         <heroImg src="${launchImg}" />
       </banner>
-      <shelf>
-         <header>
-            <title>3 Episodes</title>
-         </header>
-         <section>
-           ${episodesTemplate(vimeoID)}
-         </section>
-      </shelf>
+      ${isVideoOrAlbum(genre_id,bigDic)}
    </productTemplate>
 </document>`
 }
 
-var episodesTemplate = function (playURL) {
+var isVideoOrAlbum = function (genre_id,bigDic) {
+  if (genre_id === '3') {
+    getDefaultUrl(bigDic);
+  }else {
+    return `
+      <shelf>
+         <header>
+            <title>${bigDic.data.length} Episodes</title>
+         </header>
+         <section>
+           ${episodesTemplate(bigDic.data)}
+         </section>
+      </shelf>
+    `
+  }
+}
 
-  var ayy = [
-    {
-        "id": 1913,
-        "name": "《兔兔吐吐吐》16：跑男学霸队长邓超 引领微博界顽童群体 】",
-        "position": 1122416520,
-        "source_url": "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
-        "stream_url": null,
-        "landscape_poster": null,
-        "portrait_poster": "http://7xoboh.com1.z0.glb.clouddn.com/006.png",
-        "free": false,
-        "livestream": false,
-        "description": "世纪优优（天津）文化传播股份有限公司 是一家全球数字娱乐视频供应商，是中国地区较早开发海外业务、也是目前中国影视推广海外、全球范围内渠道较大的海外全媒体发行运营商",
-        "background_poster": null,
-        "thumbnail": null,
-        "blocked_channels": [],
-        "blocked_countries": [],
-        "thumbnail_interval": 10,
-        "masked_background_poster": null
-    },
-    {
-        "id": 1914,
-        "name": "《兔兔吐吐吐》17：跑男学霸队长邓超 引领微博界顽童群体 】",
-        "position": 1122416520,
-        "source_url": "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
-        "stream_url": null,
-        "landscape_poster": null,
-        "portrait_poster": "http://7xoboh.com1.z0.glb.clouddn.com/007.png",
-        "free": false,
-        "livestream": false,
-        "description": "世纪优优（天津）文化传播股份有限公司 是一家全球数字娱乐视频供应商，是中国地区较早开发海外业务、也是目前中国影视推广海外、全球范围内渠道较大的海外全媒体发行运营商",
-        "background_poster": null,
-        "thumbnail": null,
-        "blocked_channels": [],
-        "blocked_countries": [],
-        "thumbnail_interval": 10,
-        "masked_background_poster": null
+var castTemplate = function (castsArray) {
+  var castTemplateArray = [];
+  castsArray.map((cast,index)=>{
+    if (cast !== undefined) {
+      castTemplateArray.push(`
+        <text>${cast}</text>
+      `);
     }
-];
+  });
+  return castTemplateArray.join('');
+}
 
+var episodesTemplate = function (playListURLArray) {
   var episodesTemplateArray = [];
   var episodesBackgroundImg = BASEURL + '/images/product_episodes_bg.png';
-  ayy.map((productCellData,index)=>{
+  var playUrlArray = [];
+  playListURLArray.map((productCellData,index)=>{
+    var playUrl = compareSize(productCellData.files,productCellData.download);
+    playUrlArray.push(playUrl);
+
+    var episodeNum = index + 1;
     episodesTemplateArray.push(`
-      <lockup srcurl="207237561">
-         <img src="${episodesBackgroundImg}" width="100" height="100" />
-         <overlay>
-          <title style="color:rgba(255,255,255,1.0);tv-align: center;tv-text-style: subtitle1;">${index}</title>
-         </overlay>
+      <lockup playUrlIndex='${index}'>
+        <img src="${episodesBackgroundImg}" width="100" height="100" />
+        <overlay>
+         <title style="color:rgba(255,255,255,1.0);tv-align: center;tv-text-style: subtitle1;">${episodeNum}</title>
+        </overlay>
       </lockup>
     `)
   });
+  let str = JSON.stringify(playUrlArray);
+  localStorage.setItem('playUrlArray',str);
   return episodesTemplateArray.join('');
+}
+
+var getDefaultUrl = function (bigDic) {
+debugger
+  var videoFileArray = [];
+  var playUrl = compareSize(bigDic.files,bigDic.download);
+  videoFileArray.push(playUrl);
+  let str = JSON.stringify(videoFileArray);
+  localStorage.setItem('playUrlArray',str);
+}
+
+var compareSize = function (files,download) {
+  var playURLListArray = [];
+  files.map((file,index)=>{
+    if (file.width) {
+      playURLListArray.push(file);
+    }
+  });
+  download.map((file,index)=>{
+    if (file.width) {
+      playURLListArray.push(file);
+    }
+  });
+  playURLListArray.sort(function (a,b) {
+    return b.size - a.size;
+  });
+  return playURLListArray[0].link;
 }

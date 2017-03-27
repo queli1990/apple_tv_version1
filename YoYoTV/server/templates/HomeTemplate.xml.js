@@ -21,18 +21,18 @@ var HomeTemplate = function () {
 }
 
 var catelog_cells_up = function () {
-  let cellTemplate = [];
+  let home_cellTemplate = [];
   for (var i = 0; i < 7; i++) {
     let imgStr = "http://localhost:9001/images/home_up_" + i + ".png";
-    if (i == 0) { 
-      cellTemplate.push(`
+    if (i == 0) {
+      home_cellTemplate.push(`
           <lockup tagValue="homepage_up_scrollview">
              <img src="${imgStr}" width="801" height="450" />
              <title>Movie ${i}</title>
           </lockup>
         `)
     }else {
-      cellTemplate.push(`
+      home_cellTemplate.push(`
           <lockup tagValue="homepage_up_${i}">
              <img src="${imgStr}" width="315" height="450" />
              <title>Movie ${i}</title>
@@ -40,7 +40,7 @@ var catelog_cells_up = function () {
         `)
     }
   }
-  return cellTemplate.join('');
+  return home_cellTemplate.join('');
 }
 
 var catelog_cells_down = function () {
