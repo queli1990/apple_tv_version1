@@ -67,7 +67,7 @@ debugger
     if (localStorage.getItem('isPay') === 'true') {
       if (isPurchased()) {
         console.log('has paid');
-        Presenter.haveGotUrlToPlay(event)
+        // Presenter.haveGotUrlToPlay(event)
       }else {
         pushNativeView()
         return
@@ -336,7 +336,7 @@ debugger
     var opts = {
       method: 'GET'
     }
-    fetch('http://47.93.83.7:8000/index/?format=json', opts)
+    fetch('http://cdn.100uu.tv/index/?format=json', opts)
     .then((response) => {
       return response.text(); //返回一个带有文本的对象
     })
@@ -376,7 +376,7 @@ debugger
     var opts = {
       method: 'GET'
     }
-    var description_url = 'http://www.100uu.tv:8000/albums/' + albumID + '/?format=json';
+    var description_url = 'http://cdn.100uu.tv/albums/' + albumID + '/?format=json';
     fetch(description_url, opts)
     .then((response) => {
       return response.text(); //返回一个带有文本的对象
@@ -426,7 +426,7 @@ debugger
     requestMoreTemplate () {
       var categoryID = localStorage.getItem('categoryID');
       var categoryName = localStorage.getItem('categoryName');
-      var url = 'http://www.100uu.tv:8000/albums/?format=json&genre=' + categoryID + '&page_size=1000';
+      var url = 'http://cdn.100uu.tv/albums/?format=json&genre=' + categoryID + '&page_size=1000';
       //http://192.168.199.200:3000/episodes
 debugger;
       var opts = {

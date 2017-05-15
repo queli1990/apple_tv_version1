@@ -13,7 +13,7 @@ var jsCallback = JSValue()
 
 
 func isPurchased() -> Bool {
-    return UserDefaults.standard.bool(forKey: "com.uu.YoYoVideoVIP")
+    return UserDefaults.standard.bool(forKey: "com.uu.VIP")
 }
 
 @UIApplicationMain
@@ -23,8 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TVApplicationControllerDe
     var appController: TVApplicationController?
     
 //    static let TVBaseURL = "http://api.ottcloud.tv/smarttv/huace/"
-    static let TVBaseURL = "http://localhost:9001/"
-//    static let TVBaseURL = "http://47.93.83.7:8099/AppleTV-Versions/Version-1.1/server/"
+//    static let TVBaseURL = "http://localhost:9001/"
+    static let TVBaseURL = "http://47.93.83.7:8099/AppleTV-Versions/Version-1.1/server/"
 //    static let TVBaseURL = "http://www.100uu.tv:8099/server/"
     static let TVBootURL = "\(AppDelegate.TVBaseURL)js/application.js"
     
@@ -49,7 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TVApplicationControllerDe
         // 3
         appController = TVApplicationController(context: appControllerContext, window: window, delegate: self)
         
-        IAP.requestProducts(Set<ProductIdentifier>(arrayLiteral: "com.uu.YoYoVideoVIP"))
+        IAP.requestProducts(Set<ProductIdentifier>(arrayLiteral: "com.uu.VIP"))
         validateSubscriptionIfNeeded()
         
         // Load Swift context into JavaScript
@@ -76,17 +76,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, TVApplicationControllerDe
         let now = NSDate().timeIntervalSince1970
         if (now - validatedAt < 86400) {
             return
-        }
+        } 
         IAP.validateReceipt("f3a2caf8481e4db9a00f1ded035a034c") { (statusCode, products, receipt) in
             if (products == nil || products!.isEmpty) {
-                UserDefaults.standard.set(false, forKey: "com.uu.YoYoVideoVIP")
+                UserDefaults.standard.set(false, forKey: "com.uu.VIP")
                 UserDefaults.standard.synchronize()
                 return
             }
-            if let expireDate = products!["com.uu.YoYoVideoVIP"] {
+            if let expireDate = products!["com.uu.VIP"] {
                 if (expireDate.timeIntervalSince1970 < now) {
                     print("Subscription expired ...")
-                    UserDefaults.standard.set(false, forKey: "com.uu.YoYoVideoVIP")
+                    UserDefaults.standard.set(false, forKey: "com.uu.VIP")
                     UserDefaults.standard.synchronize()
                 }
             }

@@ -107,9 +107,9 @@ class ViewController: UIViewController {
         let attributes = [NSParagraphStyleAttributeName : descStyle]
         
         let textDesc:UITextView = UITextView(frame : CGRect(x:0, y: firstLineYPosition, width: (screenWidth), height: (screenHeight/5)))
-        textDesc.attributedText = NSAttributedString(string: "优优TV是世纪优优独立自主研发的互联网视频平台，海外独家提供北京卫视、贵州卫视、湖北卫视、江西卫视、天津卫视、陕西卫视等卫视的各类节目高清视频点播，并为用户提供各类热门电影、电视剧、综艺、动漫，如择天记、如果蜗牛有爱情、跨界歌王、喜剧总动员、非常完美、非你莫属、爱情保卫战等各类影视高清视频。",
+        textDesc.attributedText = NSAttributedString(string: "您想以每月9.99美元的价格订阅UUTV VIP吗？此订阅自动续费，购买之后，每月都会自动收费，除非您在当期结束前24小时取消订阅。订阅期长1月，每月收费9.99美元。iTunes 账户续费是在当期结束前24小时内扣费9.99美元。管理您的订阅和自动续费请通过您的账户设置。隐私政策:http://100uu.tv:8099/AppleTV-Versions/policy.html服务协议:http://100uu.tv:8099/AppleTV-Versions/term.html",
                                                      attributes:attributes)
-        textDesc.font = UIFont(name: btnTextFont, size: 38)
+        textDesc.font = UIFont(name: btnTextFont, size: 30)
         textDesc.textColor = UIColor.white
         textDesc.textAlignment = .center
         self.view.addSubview(textDesc)
@@ -209,7 +209,7 @@ class ViewController: UIViewController {
     
     func subscribeClicked(button: UIButton!) {
         showSpinner()
-        IAP.purchaseProduct("com.uu.YoYoVideoVIP", handler: handlePurchase)
+        IAP.purchaseProduct("com.uu.VIP", handler: handlePurchase)
     }
     
     func restoreClicked(button: UIButton!) {

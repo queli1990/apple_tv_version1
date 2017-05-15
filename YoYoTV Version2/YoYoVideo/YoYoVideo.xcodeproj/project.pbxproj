@@ -222,6 +222,11 @@
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = UA783A5Y5N;
 						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
+						};
 					};
 					000ED8661E5AE28400FCBF83 = {
 						CreatedOnToolsVersion = 8.2.1;
